@@ -1,63 +1,59 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace ArcheryDemo
+public class RoomCondition : MonoBehaviour
 {
-    public class RoomCondition : MonoBehaviour
+    private List<GameObject> MonsterListRoom = new List<GameObject>();
+
+    public bool playerInThisRoom = false;
+    public bool isClearRoom = false;
+    
+    void Start()
     {
+        
+    }
     
-        //Room에 존재하는 몬스터들
-        private readonly List<GameObject> monsterListInRoom = new List<GameObject>();
-
-        [Tooltip("플레이어가 입장했는가?")]
-        public bool playerInThisRoom;
-    
-        [Tooltip("룸이 클리어 됬는가?")]
-        public bool isClearRoom;
-    
-    
-        void Update()
+    void Update()
+    {
+        if (playerInThisRoom)
         {
-            if (playerInThisRoom)
+            if (MonsterListRoom.Count <= 0 && !isClearRoom)
             {
-                //몬스터가 0보다 작거나 같고 현재 클리어 상태가 아니라면
-                if (monsterListInRoom.Count <= 00 && !isClearRoom)
-                {
-                    isClearRoom = true;
-                    Debug.Log("Clear");
-                }
+                isClearRoom = true;
+                Debug.Log("Clear 클리어 했습니다");
             }
         }
+    }
 
-        private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
         {
-            if (other.CompareTag("Player"))
-            {
-                playerInThisRoom = true;
-                PlayerTargeting.Instance.MonsterList = new List<GameObject>(monsterListInRoom);
-                // Debug.Log("Enter New Room! Mob count : " +PlayerTargeting.Instance.MonsterList.Count);
-            }
-
-            if (other.CompareTag("Monster"))
-            {
-                monsterListInRoom.Add(other.gameObject);
-                // Debug.Log("Mob Name : "+other.gameObject.name);
-            }
+            //플레이어가 방에 들어오면 이방의 몹리스트를 링크(복사) 시킨다
+            playerInThisRoom = true;
+            PlayerTargeting.Instance.MonsterList = new List<GameObject>(MonsterListRoom);
+            // Debug.Log("Enter New Room! Mob count : "+PlayerTargeting.Instance.MonsterList.Count);
         }
-
-        private void OnTriggerExit(Collider other)
+      
+        if (other.CompareTag("Monster"))
         {
-            if (other.CompareTag("Player"))
-            {
-                playerInThisRoom = false;
-                Debug.Log("Player Exit !!");
-            }
+            MonsterListRoom.Add(other.gameObject);
+            // Debug.Log("Mob name : " +other.gameObject.name);
+        }
+    }
 
-            if (other.CompareTag("Monster"))
-            {
-                monsterListInRoom.Remove(other.gameObject);
-            }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInThisRoom = false;
+            Debug.Log("Player Exit 방을 떠났습니다");
+        }
+        if (other.CompareTag("Monster"))
+        {
+            MonsterListRoom.Remove(other.gameObject);
         }
     }
 }
