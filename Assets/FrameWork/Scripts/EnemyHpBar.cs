@@ -11,9 +11,9 @@ public class EnemyHpBar : MonoBehaviour
 
     public Transform enemy;
 
-    public float maxHp = 1000.0f;
+    public float maxHp = 100.0f;
 
-    public float currentHp = 1000.0f;
+    public float currentHp = 100.0f;
     
     // Start is called before the first frame update
     void Start()
@@ -38,9 +38,9 @@ public class EnemyHpBar : MonoBehaviour
         }
     }
 
-    public void Dmg()
+    public void Dmg(float _hitDamage)
     {
-        currentHp -= 300.0f;
+        currentHp -= _hitDamage;
         Invoke("BackHpFun",0.5f);
     }
 

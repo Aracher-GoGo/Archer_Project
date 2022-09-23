@@ -8,6 +8,9 @@ TagManager:
   - Wall
   - NextRoom
   - Bullet
+  - FxTemporaire
+  - MeleeAtk
+  - HpBooster
   layers:
   - Default
   - TransparentFX
